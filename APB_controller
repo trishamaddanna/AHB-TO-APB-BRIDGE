@@ -1,0 +1,62 @@
+APB_controller( input valid, hwritereg, hclk, hresetn, hwrite, input [31:0] haddr1, haddr2, input [31:0] hwdata1, hwdata2, input [2:0] tempselx, input [31:0] prdata, output reg pwrite, penable, hreadyout, output reg [2:0] pselx, output reg [31:0] pwdata, 
+output reg [31:0] paddr); 
+reg [2:0] pre_state, next_state; reg penable_temp, pwrite_temp, hreadyout_temp; reg [2:0] pselx_temp; reg [31:0] paddr_temp, pwdata_temp; 
+parameter st_idle = 3'b000; parameter st_read = 3'b001; parameter st_readenable = 3'b010; parameter st_write = 3'b011; parameter st_writeenable = 3'b100; parameter st_writepending = 3'b101; parameter st_writeenablepending = 3'b110; parameter st_writewait = 3'b111; 
+always @(posedge hclk) 
+begin 
+if (!hresetn) 
+pre_state <= st_idle; 
+else pre_state <= next_state; 
+end 
+always @* 
+begin 
+case (pre_state) 
+st_idle: if (valid && hwrite) 
+           next_state = st_writewait; 
+         else if (valid && ~hwrite) 
+            next_state = st_read; 
+         else next_state = st_idle; 
+st_read: next_state = st_readenable; 
+st_readenable: if (valid && ~hwrite) next_state = st_read; 
+               else if (valid && hwrite) next_state = st_writewait; 
+               else next_state = st_idle; 
+st_write: if (valid) next_state = st_writeenablepending; 
+          else next_state = st_writeenable; 
+st_writeenable: if (valid && ~hwrite) next_state = st_read; 
+              else if (valid && hwrite) next_state = st_writewait;
+              else next_state = st_idle; 
+st_writepending: next_state = st_writeenablepending; 
+st_writeenablepending: if (valid && hwritereg) next_state = st_writepending; 
+                       else if (~valid && hwritereg) next_state = st_write; 
+                      else next_state = st_read; 
+st_writewait: if (valid) next_state = st_writepending; 
+            else next_state = st_write; 
+endcase 
+end 
+always @* begin 
+case (pre_state) 
+st_idle: if (valid && hwrite) 
+        begin pselx_temp = 0; penable_temp = 0; hreadyout_temp = 1; 
+        end else if (valid && !hwrite) 
+       begin paddr_temp = haddr1; pwrite_temp = hwrite; pselx_temp = tempselx; penable_temp = 0; hreadyout_temp = 0; 
+       end else begin pselx_temp = 0; penable_temp = 0; hreadyout_temp = 1; end st_read: begin penable_temp = 1; hreadyout_temp = 1; end 
+st_readenable: if (valid && !hwrite) 
+             begin paddr_temp = haddr1; pwrite_temp = hwrite; pselx_temp = tempselx; penable_temp = 0; hreadyout_temp = 0; 
+            end else if (valid && hwrite) begin pselx_temp = 0; penable_temp = 0; hreadyout_temp = 1; end 
+st_writewait: begin paddr_temp = haddr1; pwdata_temp = hwdata1; pwrite_temp = hwrite; 
+             pselx_temp = tempselx; penable_temp = 0; hreadyout_temp = 0; end st_write: begin penable_temp = 1; hreadyout_temp = 1; end 
+st_writeenablepending: begin haddr_temp = haddr1; pwdata_temp = hwdata1; pwrite_temp = hwrite; pselx_temp = tempsel; penable_temp = 0; hreadyout_temp = 0; end 
+endcase 
+end 
+always @(posedge hclk) begin 
+if (!hresetn) 
+begin 
+paddr <= 0; pwdata <= 0; pwrite <= 0; pselx <= 0; 
+penable <= 0; hreadyout <= 1; 
+end 
+else 
+begin 
+paddr <= paddr_temp; pwdata <= pwdata_temp; pselx <= pselx_temp; pwrite <= pwrite_temp; penable <= penable_temp; hreadyout <= hreadyout_temp; 
+end 
+end 
+endmodule 	 
