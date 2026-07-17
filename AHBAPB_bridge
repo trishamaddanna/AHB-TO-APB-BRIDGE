@@ -1,0 +1,41 @@
+module AHBAPB_bridge( 
+  input hclk,   input hresetn,   input hwrite,   input hreadyin,   input [31:0] hwdata,   input [31:0] haddr,   input [31:0] prdata,   input [1:0] htrans,   output penable,   output pwrite,   output hreadyout,   output [1:0] hresp,   output [31:0] hrdata,   output [31:0] paddr,   output [31:0] pwdata,   output [2:0] pselx 
+  ); 
+  wire valid, hwritereg;   wire [2:0] tempselx;   wire [31:0] haddr1, haddr2;   wire [31:0] hwdata1, hwdata2; 
+       AHB_slave_interface ahb( 
+       .hclk(hclk), 
+    .hresetn(hresetn), 
+    .hwrite(hwrite), 
+    .hreadyin(hreadyin), 
+    .htrans(htrans), 
+    .haddr(haddr), 
+    .hwdata(hwdata), 
+    .hresp(hresp), 
+    .valid(valid), 
+    .hrdata(hrdata), 
+    .haddr1(haddr1), 
+    .haddr2(haddr2), 
+    .hwdata1(hwdata1), 
+    .hwdata2(hwdata2), 
+    .hwritereg(hwritereg), 
+    .tempselx(tempselx) 
+    ); 
+    APB_controller apb( 
+    .valid(valid), 
+    .hwritereg(hwritereg), 
+    .hclk(hclk), 
+    .hresetn(hresetn), 
+    .hwrite(hwrite), 
+    .haddr1(haddr1), 
+    .haddr2(haddr2), 
+    .hwdata1(hwdata1), 
+    .hwdata2(hwdata2), 
+    .tempselx(tempselx), 
+    .prdata(prdata), 
+    .pwrite(pwrite), 
+    .penable(penable), 
+    .hreadyout(hreadyout), 
+    .pselx(pselx),     .pwdata(pwdata), 
+    .paddr(paddr) 
+     ); 
+       endmodule 
