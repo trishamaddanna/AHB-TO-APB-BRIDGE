@@ -35,7 +35,8 @@ module AHBAPB_bridge(
     .pwrite(pwrite), 
     .penable(penable), 
     .hreadyout(hreadyout), 
-    .pselx(pselx),     .pwdata(pwdata), 
+    .pselx(pselx),     
+    .pwdata(pwdata), 
     .paddr(paddr) 
      ); 
        endmodule 
