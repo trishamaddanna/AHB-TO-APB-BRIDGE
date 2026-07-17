@@ -11,6 +11,7 @@ The main sections of this module are:
 •	APB transfer state machine, which is independent of the device memory map 
 •	APB output signal generation. 
 The base addresses of each of the peripherals (timer, interrupt controller, and remap and pause controller) are defined in the AHB to APB bridge interface, which selects the peripheral according to its base address. The whole APB address range is also defined in the bridge. These base addresses can be implementation-specific. The peripherals standard specifies only the register offsets (from an unspecified base address), register bit meaning, and minimum supported function  
+
 The APB data bus is split into two separate directions:  
 •	read (PRDATA), where data travels from the peripherals to the bridge  
 •	write (PWDATA), where data travels from the bridge to the peripherals.  
