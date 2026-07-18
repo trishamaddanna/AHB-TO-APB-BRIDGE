@@ -40,3 +40,29 @@ Functional validation and protocol timing checks were performed using **ModelSim
 *   **Master Burst Read/Write:** Forces the bridge to process uninterrupted stream sequences by tracking incremental address loops (`haddr + 1`) and evaluating `$random` data pattern lines, proving the robustness of the wait-state insertion loop under high throughput load.
 
 ---
+
+## 📂 Repository Layout & Project Artifacts
+
+All structural design modules, behavioral verification models, block schematics, and simulation timing waveform captures are hosted directly within the flat root directory for direct evaluation:
+
+### 💻 Hardware Design & Simulation Codebases
+*   `AHBAPB_bridge` — Top-level system structural design wrapper connecting the bus data lines.
+*   `AHB_slave_interface.v` — Synthesizable Verilog module containing protocol address decoding logic and data pipeline registers.
+*   `APB_controller` — Synthesizable Verilog implementation of the 8-state APB bus protocol controller.
+*   `AHB_master` — Behavioral master stimulus verification model containing standalone and burst transaction tasks.
+
+### 🗺️ System Blueprints & State Machinery Layouts
+*   `AHB to APB bridge block diagram.jpg` — Hardware architecture block blueprint detailing system port interfaces.
+*   `State table of APB Controller.jpg` — Algorithmic FSM state machine flowchart illustrating state transition criteria.
+
+### 🖥️ Technology Netlist RTL Schematics
+*   `RTL Schematic of AHB Slave Interface.jpg` — Synthesized technology netlist gate capture outlining the combinational address logic.
+*   `RTL schematic of APB Controller.jpg` — Synthesized gate-level logic schematics tracking internal temp registers.
+*   `Bridge Circuit RTL Schematic.jpg` — Complete top-level technology schematic highlighting structural module wiring.
+
+### 📊 ModelSim Timing Simulation Waveforms
+*   `MASTER_SINGLE_READ.jpg` — Functional wave logs validating single-word standalone read transactions.
+*   `MASTER_SINGLE_WRITE.jpg` — Functional wave logs validating single-word standalone write transactions.
+*   `MASTER_BURST_READ.jpg` — Functional wave logs validating consecutive multi-word burst read data streams.
+*   `MASTER_BURST_WRITE.jpg` — Functional wave logs validating consecutive multi-word burst write data streams.
+*   `README.md` — Main technical architectural specification and portfolio landing page.
