@@ -1,6 +1,6 @@
 # Design and Verification of Synthesizable AMBA AHB to APB Bridge
 
-An industrial-grade hardware bus-bridge architecture developed during the **Maven Silicon Advanced VLSI Design Internship (DI-39)**. Implemented in synthesizable Verilog HDL, this subsystem serves as a dedicated communication gateway between a high-frequency, pipelined **AMBA AHB backbone bus** (interconnecting high-performance processors and DMA controllers) and a low-frequency, non-pipelined **AMBA APB peripheral bus** (driving low-bandwidth device blocks like timers, keypads, and UARTs).
+An industrial-grade hardware bus-bridge architecture implemented in synthesizable Verilog HDL, this subsystem serves as a dedicated communication gateway between a high-frequency, pipelined **AMBA AHB backbone bus** (interconnecting high-performance processors and DMA controllers) and a low-frequency, non-pipelined **AMBA APB peripheral bus** (driving low-bandwidth device blocks like timers, keypads, and UARTs).
 
 The system architecture prevents data loss across clock domains by managing transaction-level protocols, buffering address/control lines, and injecting automatic wait-states to throttle the pipelined AHB master during slow peripheral accesses.
 
