@@ -34,10 +34,20 @@ The system functions simultaneously as an AHB Slave and an APB Master, splitting
 
 ## 🔬 Functional Verification & Waveform Profiles
 
-Functional validation and protocol timing checks were performed using **ModelSim (Intel FPGA Starter Edition)**. The exhaustive simulation test suite handles advanced AMBA corner cases:
+Functional validation and protocol timing checks were performed using **ModelSim**. The exhaustive simulation test suite handles advanced AMBA corner cases:
 
 *   **Master Single Read/Write:** Verifies fixed-width, single-word transactions. Validates correct `PENABLE` tracking relative to `HCLK` rising edges during standalone cycles.
 *   **Master Burst Read/Write:** Forces the bridge to process uninterrupted stream sequences by tracking incremental address loops (`haddr + 1`) and evaluating `$random` data pattern lines, proving the robustness of the wait-state insertion loop under high throughput load.
+
+---
+
+## 🛠️ Toolchain Infrastructure & Synthesis Environment
+
+To meet strict commercial hardware specifications and ensure protocol validation, the design was processed through an industry-standard synthesis and verification flow:
+
+*   **RTL Design & Simulation Testbench:** Architected, debugged, and behaviorally simulated using **ModelSim**. The verification environment features modular stimulus blocks to assert single and multi-word burst transaction tasks, check protocol-level edge alignments, and track active state variables during data transfer steps.
+*   **Logic Synthesis & Gate-Level Netlist:** Compiled, optimized, and structurally synthesized using **Intel Quartus Prime System Edition**. The toolchain maps the synchronous Verilog descriptions into a highly optimized technology mapping network, producing a complete **Gate-Level Netlist** without synthesis latch inferences.
+*   **Timing & Pipelining Analysis:** Functional timing checks verify the bridge accurately routes multi-word burst data packets over the bus matrix lines, validating correct clock tree handshakes with zero data truncation under high throughput loads.
 
 ---
 
